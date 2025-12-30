@@ -1,5 +1,5 @@
 # Generated from https://raw.githubusercontent.com/tmobile/tmus-geofeed/main/tmus-geo-ip.txt
-# Last updated: 2025-12-29T06:06:16.391Z
+# Last updated: 2025-12-30T06:05:29.491Z
 172.32.0.0/11
 208.54.0.0/17
 208.54.128.0/19
