@@ -5,9 +5,9 @@ name: Check types
 
 on:
     push:
-        branches: ["master"]
+        branches: ['master']
     pull_request:
-        branches: ["master"]
+        branches: ['master']
 
 jobs:
     build:
@@ -15,7 +15,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: ["24.x"]
+                node-version: ['24.x']
 
         steps:
             - uses: actions/checkout@v4
@@ -23,6 +23,6 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: "npm"
+                  cache: 'npm'
             - run: npm install
             - run: npm run check

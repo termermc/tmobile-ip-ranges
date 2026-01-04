@@ -1,28 +1,31 @@
 {
-    "name": "tmobile-ip-ranges",
-    "version": "1.0.0",
-    "description": "Formatted IP ranges sourced from T-Mobile's tmus-geofeed repo",
-    "homepage": "https://github.com/termermc/tmobile-ip-ranges#readme",
-    "bugs": {
-        "url": "https://github.com/termermc/tmobile-ip-ranges/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/termermc/tmobile-ip-ranges.git"
-    },
-    "license": "MIT",
-    "author": "",
-    "type": "module",
-    "main": "update.js",
-    "scripts": {
-        "update": "node .",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "fmt": "prettier --write .",
-        "check": "tsc --noEmit"
-    },
-    "devDependencies": {
-        "@types/node": "^24.10.1",
-        "prettier": "^3.7.4",
-        "typescript": "^5.9.3"
-    }
+	"name": "tmobile-ip-ranges",
+	"version": "1.0.0",
+	"description": "Formatted IP ranges sourced from T-Mobile's tmus-geofeed repo",
+	"homepage": "https://github.com/termermc/tmobile-ip-ranges#readme",
+	"bugs": {
+		"url": "https://github.com/termermc/tmobile-ip-ranges/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/termermc/tmobile-ip-ranges.git"
+	},
+	"license": "MIT",
+	"author": "",
+	"type": "module",
+	"main": "update.js",
+	"scripts": {
+		"update": "node .",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"fmt": "prettier --write .",
+		"check": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.1",
+		"prettier": "^3.7.4",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"geofeed2ranges": "^1.0.0"
+	}
 }

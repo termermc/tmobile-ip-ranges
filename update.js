@@ -1,98 +1,40 @@
-import fs from 'node:fs'
-import { rename } from 'node:fs/promises'
-import readline from 'node:readline/promises'
+import { rename, open } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, join as pathJoin } from 'node:path'
-import https from 'node:https'
 import process from 'node:process'
+import { geofeedToRanges } from 'geofeed2ranges'
 
 process.env.TZ = 'UTC'
 
 const rootPath = dirname(fileURLToPath(import.meta.url))
 const tmpPath = pathJoin(rootPath, '.tmp.ranges.txt')
 const finalPath = pathJoin(rootPath, 'ranges.txt')
-const srcUrl = new URL(
-    'https://raw.githubusercontent.com/tmobile/tmus-geofeed/main/tmus-geo-ip.txt',
-)
+const srcUrl =
+	'https://raw.githubusercontent.com/tmobile/tmus-geofeed/main/tmus-geo-ip.txt'
 
-const srcRes = await new Promise((promRes, promRej) => {
-    https.get(srcUrl, promRes).on('error', promRej)
-})
+const srcRes = await fetch(srcUrl)
 
-if (srcRes.statusCode !== 200) {
-    throw new Error(
-        `Failed to fetch source file at ${srcUrl}. Server returned status ${srcRes.statusCode}`,
-    )
+if (srcRes.status !== 200) {
+	throw new Error(
+		`Failed to fetch source file at ${srcUrl}. Server returned status ${srcRes.status}.`,
+	)
+}
+if (srcRes.body == null) {
+	throw new Error(
+		`Got OK response for source file at ${srcUrl}, but it had no body.`,
+	)
 }
 
-const tmpOut = fs.createWriteStream(tmpPath)
-await new Promise((promRes, promRej) => {
-    tmpOut
-        .once('open', () => {
-            const header = `# Generated from ${srcUrl.toString()}\n# Last updated: ${new Date().toISOString()}\n`
-            tmpOut.write(header, err => {
-                if (err) {
-                    promRej(err)
-                    return
-                }
+const fh = await open(tmpPath, 'w')
 
-                promRes()
-            })
-        })
-        .once('error', promRej)
-})
+await fh.write(
+	`# Generated from ${srcUrl}\n# Last updated: ${new Date().toISOString()}\n`,
+)
 
-const reader = readline.createInterface({
-    input: srcRes,
-    crlfDelay: Infinity,
-    terminal: false,
-})
+for await (const ln of geofeedToRanges(srcRes.body)) {
+	await fh.write(ln + '\n')
+}
 
-await new Promise((promRes, promRej) => {
-    let failed = false
-    let lines = 0
-
-    /** @param {any} err */
-    function fail(err) {
-        failed = true
-        tmpOut.close()
-        reader.close()
-        promRej(err)
-    }
-    srcRes.on('error', fail)
-    tmpOut.on('error', fail)
-    reader.on('close', () => {
-        if (failed) {
-            return
-        }
-        if (lines === 0) {
-            fail(new Error('Found no valid IP range lines from source file'))
-            return
-        }
-
-        reader.close()
-        tmpOut.close((err) => {
-            if (err) {
-                fail(err)
-                return
-            }
-            promRes()
-        })
-    })
-
-    reader.on('line', (ln) => {
-        if (ln === '' || ln[0] === '#') {
-            return
-        }
-
-        const commaIdx = ln.indexOf(',')
-        if (commaIdx === -1) {
-            return
-        }
-
-        tmpOut.write(ln.slice(0, commaIdx) + '\n')
-        lines++
-    })
-})
+await fh.close()
 
 await rename(tmpPath, finalPath)

@@ -2,7 +2,7 @@ name: Update ranges
 
 on:
     schedule:
-        - cron: "0 6 * * *"
+        - cron: '0 6 * * *'
 
 jobs:
     execute:
@@ -10,18 +10,20 @@ jobs:
 
         strategy:
             matrix:
-                node-version: ["24.x"]
+                node-version: ['24.x']
 
         steps:
             - uses: actions/checkout@v2
 
-            - name: "Use Node.js ${{ matrix.node-version }}"
-              uses: "actions/setup-node@v4"
+            - name: 'Use Node.js ${{ matrix.node-version }}'
+              uses: 'actions/setup-node@v4'
               with:
                   node-version: ${{ matrix.node-version }}
 
             - name: Update ranges
-              run: node update.js
+              run: |
+                  npm install --omit=dev
+                  node update.js
 
             - name: Commit files
               run: |
