@@ -7,6 +7,6 @@ Each range is CIDR-formatted, e.g. `192.168.1.0/24`.
 
 # Updating
 
-Run `node update.js`. It will download and format the IP ranges.
+Run `npm install --omit=dev`, then `node update.js`.
 
-You do not need to run `npm install`; the script has no non-Node dependencies.
+It will download and format the IP ranges.
