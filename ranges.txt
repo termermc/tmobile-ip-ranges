@@ -1,5 +1,5 @@
 # Generated from https://raw.githubusercontent.com/tmobile/tmus-geofeed/main/tmus-geo-ip.txt
-# Last updated: 2026-02-25T06:23:23.316Z
+# Last updated: 2026-02-26T06:20:45.429Z
 172.32.0.0/11
 208.54.0.0/17
 208.54.128.0/19
@@ -1877,7 +1877,6 @@
 2607:fb90:f740::/44
 2607:fb90:f750::/44
 2607:fb90:f760::/44
-2607:fb92:2400::/40
 2607:fb90:f80::/44
 2607:fb90:f90::/44
 2607:fb90:f910::/44
